@@ -1,11 +1,11 @@
-import dotenv from "dotenv";
-dotenv.config(); // Load environment variables first
-
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import connectDB from "./config/mongodb.js";
-import authRoutes from "./Routes/AuthRoutes.js";
+import dotenv from "dotenv";
+import connectDB from "./config/mongodb_simple.js";
+import authRoutes from "./Routes/AuthRoutes_simple.js";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
