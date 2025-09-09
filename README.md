@@ -17,6 +17,7 @@ A full-stack MERN (MongoDB, Express.js, React, Node.js) authentication system wi
 ## Tech Stack
 
 ### Backend
+
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
 - **MongoDB** - Database
@@ -28,6 +29,7 @@ A full-stack MERN (MongoDB, Express.js, React, Node.js) authentication system wi
 - **CORS** - Cross-origin requests
 
 ### Frontend
+
 - **React** - UI library
 - **Vite** - Build tool
 - **Tailwind CSS** - Styling
@@ -58,22 +60,27 @@ MernAuth/
 ## Setup Instructions
 
 ### Prerequisites
+
 - Node.js (v20+)
 - MongoDB Atlas account
 - Brevo SMTP account
 
 ### Backend Setup
+
 1. Navigate to Server folder:
+
    ```bash
    cd Server
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Create `.env` file:
+
    ```env
    MONGODB_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret
@@ -93,12 +100,15 @@ MernAuth/
    ```
 
 ### Frontend Setup
+
 1. Navigate to client folder:
+
    ```bash
    cd client/vite-project
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
@@ -111,31 +121,34 @@ MernAuth/
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 - `POST /api/auth/logout` - User logout
 
 ### Email Verification
+
 - `POST /api/auth/send-verify-otp` - Send OTP for verification
 - `POST /api/auth/verify-account` - Verify account with OTP
 
 ### Debug (Development)
+
 - `POST /api/auth/debug-token` - Debug JWT tokens
 
 ## Environment Variables
 
 Create a `.env` file in the Server directory with the following variables:
 
-| Variable | Description |
-|----------|-------------|
-| `MONGODB_URI` | MongoDB connection string |
-| `JWT_SECRET` | Secret key for JWT signing |
-| `SMTP_HOST` | SMTP server host |
-| `SMTP_PORT` | SMTP server port |
-| `SMTP_USER` | SMTP username |
-| `SMTP_PASS` | SMTP password |
-| `SENDER_EMAIL` | Email address for sending emails |
-| `NODE_ENV` | Environment (development/production) |
+| Variable       | Description                          |
+| -------------- | ------------------------------------ |
+| `MONGODB_URI`  | MongoDB connection string            |
+| `JWT_SECRET`   | Secret key for JWT signing           |
+| `SMTP_HOST`    | SMTP server host                     |
+| `SMTP_PORT`    | SMTP server port                     |
+| `SMTP_USER`    | SMTP username                        |
+| `SMTP_PASS`    | SMTP password                        |
+| `SENDER_EMAIL` | Email address for sending emails     |
+| `NODE_ENV`     | Environment (development/production) |
 
 ## Contributing
 
