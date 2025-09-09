@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
-import transporter from "../config/nodemailer.js";
+import transporter from "../config/nodemailer_simple.js";
 
 // Helper function to generate JWT token
 const generateToken = (userId) => {
@@ -109,22 +109,10 @@ export const sendVerificationOtp = async (req, res) => {
 
     // Send email
     const mailOptions = {
-      from: `"MERN Auth App" <${process.env.SENDER_EMAIL}>`,
+      from: process.env.SENDER_EMAIL,
       to: user.email,
-      subject: "🔑 Your Account Verification Code",
+      subject: "Account Verification OTP",
       text: `Your verification OTP is: ${otp}`,
-      html: `
-        <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
-          <h2 style="color: #333; text-align: center;">Account Verification</h2>
-          <p style="color: #666; font-size: 16px;">Hello,</p>
-          <p style="color: #666; font-size: 16px;">Your OTP for account verification is:</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <span style="background: #007bff; color: white; padding: 15px 30px; font-size: 24px; letter-spacing: 5px; border-radius: 5px; display: inline-block;">${otp}</span>
-          </div>
-          <p style="color: #666; font-size: 14px;">This OTP will expire in 24 hours.</p>
-          <p style="color: #666; font-size: 14px;">If you didn't request this, please ignore this email.</p>
-        </div>
-      `,
     };
 
     try {
@@ -172,100 +160,6 @@ export const verifyEmail = async (req, res) => {
       success: true,
       message: "Account verified successfully",
     });
-  } catch (error) {
-    return res.json({ success: false, message: error.message });
-  }
-};
-
-// Send password reset OTP
-export const sendResetOtp = async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    if (!email) {
-      return res.json({ success: false, message: "Email is required" });
-    }
-
-    const user = await userModel.findOne({ email });
-    if (!user) {
-      return res.json({ success: false, message: "User not found" });
-    }
-
-    // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    user.resetOtp = otp;
-    user.resetOtpExpiresAt = Date.now() + 15 * 60 * 1000; // 15 minutes
-    await user.save();
-
-    // Send email
-    const mailOptions = {
-      from: `"MERN Auth App" <${process.env.SENDER_EMAIL}>`,
-      to: user.email,
-      subject: "🔐 Password Reset Code",
-      text: `Your password reset OTP is: ${otp}`,
-      html: `
-        <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
-          <h2 style="color: #333; text-align: center;">Password Reset</h2>
-          <p style="color: #666; font-size: 16px;">Hello,</p>
-          <p style="color: #666; font-size: 16px;">You requested a password reset. Your OTP is:</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <span style="background: #dc3545; color: white; padding: 15px 30px; font-size: 24px; letter-spacing: 5px; border-radius: 5px; display: inline-block;">${otp}</span>
-          </div>
-          <p style="color: #666; font-size: 14px;">This OTP will expire in 15 minutes.</p>
-          <p style="color: #666; font-size: 14px;">If you didn't request this, please ignore this email.</p>
-        </div>
-      `,
-    };
-
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log("✓ Password reset OTP sent to", user.email);
-    } catch (emailError) {
-      console.error("✗ Email failed:", emailError.message);
-      // Continue anyway - OTP is saved in database
-    }
-
-    return res.json({
-      success: true,
-      message: "Password reset OTP sent to your email",
-    });
-  } catch (error) {
-    return res.json({ success: false, message: error.message });
-  }
-};
-
-// Reset password with OTP
-export const resetPassword = async (req, res) => {
-  try {
-    const { email, otp, newPassword } = req.body;
-
-    if (!email || !otp || !newPassword) {
-      return res.json({ success: false, message: "All fields are required" });
-    }
-
-    const user = await userModel.findOne({ email });
-    if (!user) {
-      return res.json({ success: false, message: "User not found" });
-    }
-
-    // Check OTP
-    if (user.resetOtp !== otp) {
-      return res.json({ success: false, message: "Invalid OTP" });
-    }
-
-    // Check expiration
-    if (!user.resetOtpExpiresAt || user.resetOtpExpiresAt < Date.now()) {
-      return res.json({ success: false, message: "OTP expired" });
-    }
-
-    // Hash new password and update
-    const hashedPassword = await bcrypt.hash(newPassword, 12);
-    user.password = hashedPassword;
-    user.resetOtp = undefined;
-    user.resetOtpExpiresAt = undefined;
-    await user.save();
-
-    return res.json({ success: true, message: "Password reset successfully" });
   } catch (error) {
     return res.json({ success: false, message: error.message });
   }
