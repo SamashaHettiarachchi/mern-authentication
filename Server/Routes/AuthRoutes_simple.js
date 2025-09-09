@@ -5,18 +5,14 @@ import {
   register,
   sendVerificationOtp,
   verifyEmail,
-  sendResetOtp,
-  resetPassword,
-} from "../controllers/authControllers.js";
-import userAuth from "../middleware/userAuth.js";
+} from "../controllers/authControllers_simple.js";
+import userAuth from "../middleware/userAuth_simple.js";
 
 const router = express.Router();
 
 // Public routes
 router.post("/register", register);
 router.post("/login", login);
-router.post("/send-reset-otp", sendResetOtp);
-router.post("/reset-password", resetPassword);
 
 // Protected routes (require authentication)
 router.post("/logout", userAuth, logout);
