@@ -1,32 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { backendUrl, setIsLoggedIn, setUserData } = useContext(AppContext);
   const [state, setState] = useState("Sign Up");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      axios.defaults.withCredentials = true;
 
-    if (state === "Sign Up") {
-      // Sign Up logic
-      console.log("Sign Up Data:", {
-        name,
-        email,
-        password,
-      });
-      // TODO: Add API call for registration
-    } else {
-      // Login logic
-      console.log("Login Data:", {
-        email,
-        password,
-      });
-      // TODO: Add API call for login
+      if (state === "Sign Up") {
+        const { data } = await axios.post(backendUrl + "/auth/register", {
+          name,
+          email,
+          password,
+        });
+        if (data.success) {
+          toast.success(data.message);
+          setIsLoggedIn(true);
+          setUserData(data.user);
+          navigate("/");
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        const { data } = await axios.post(backendUrl + "/auth/login", {
+          email,
+          password,
+        });
+        if (data.success) {
+          toast.success(data.message);
+          setIsLoggedIn(true);
+          navigate("/");
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -49,7 +69,7 @@ const Login = () => {
             : "Login to your account!"}
         </p>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmitHandler}>
           {state === "Sign Up" && (
             <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
               <img src={assets.person_icon} alt="" />
