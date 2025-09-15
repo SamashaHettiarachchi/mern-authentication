@@ -1,15 +1,19 @@
 {
-  "name": "server",
+  "name": "mern-auth-server",
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build": "echo 'Build complete'"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "MERN Authentication Backend Server",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
