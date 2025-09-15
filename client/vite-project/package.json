@@ -1,8 +1,9 @@
 {
-  "name": "vite-project",
+  "name": "mern-auth-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "homepage": "https://your-app-name.vercel.app",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
